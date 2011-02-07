@@ -27,3 +27,10 @@
   (is (= "http://example.com/foo/bar"
          (:body (GET (subresource url-echo-subresource "./bar")))))  )
 
+(deftest from-repr
+  (is (= "foobar"
+         (GET
+          (with-meta
+            (resource "http://example.com"
+                      (fn [_] {:status 200 :body "bar"}))
+             {:from-repr #(str "foo" (:body %))})))))

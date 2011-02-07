@@ -7,10 +7,11 @@
 
 (defn request
   [resource method req]
-  ((.adapter resource) (merge req {:request-method method
-                                   :url (.toString (.normalize (.url resource)))})))
+  ((or (:from-repr (meta resource)) identity)
+   ((.adapter resource) (merge req {:request-method method
+                                    :url (.toString (.normalize (.url resource)))}))))
 
-(deftype Resource [^URI url adapter]
+(defrecord Resource [^URI url adapter]
   resrc.core.Resource
   (GET [resource req] (request resource :get req))
   (PUT [resource req] (request resource :put req))
